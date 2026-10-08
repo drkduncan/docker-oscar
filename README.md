@@ -26,7 +26,7 @@ To simply do a quick and dirty run of the Oscar container:
 docker run \
     -d --rm \
     --name oscar \
-    -v=${pwd}/oscar-data:/config/Documents/OSCAR_Data \
+    -v=${pwd}/oscar-data:/config/Documents/OSCAR20_Data \
     -v=${pwd}/SDCARD:/config/SDCARD \
     --publish=3000:3000 \
      rogerrum/docker-oscar
@@ -39,6 +39,14 @@ $ docker stop oscar
 To remove the container simply run:
 ```
 $ docker rm oscar
+```
+
+## Upgrading from OSCAR 1.x
+OSCAR 2.0 stores its data in a new SQL database under `OSCAR20_Data` and will not use the old `OSCAR_Data` folder directly.
+To migrate, mount your existing 1.x data read-only next to the new folder for the first start, then pick it in OSCAR's migration prompt:
+```
+    -v=${pwd}/oscar-data-v1:/config/Documents/OSCAR_Data:ro \
+    -v=${pwd}/oscar-data:/config/Documents/OSCAR20_Data \
 ```
 
 ## Docker Compose
@@ -56,7 +64,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./oscar-data:/config/Documents/OSCAR_Data:rw
+      - ./oscar-data:/config/Documents/OSCAR20_Data:rw
       - ./SDCARD:/config/SDCARD:rw
     environment:
       TZ: "America/Chicago"
@@ -115,7 +123,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./oscar-data:/config/Documents/OSCAR_Data:rw
+      - ./oscar-data:/config/Documents/OSCAR20_Data:rw
       - ./SDCARD:/config/SDCARD:rw
     environment:
       TZ: "America/Chicago"
