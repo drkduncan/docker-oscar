@@ -1,19 +1,15 @@
 # Docker Image for Open Source CPAP Analysis Reporter (OSCAR)
 
-[![Docker Image Version (latest semver)](https://img.shields.io/docker/v/rogerrum/docker-oscar)](https://hub.docker.com/r/rogerrum/docker-oscar/tags)
-[![license](https://img.shields.io/github/license/rogerrum/docker-oscar)](https://github.com/rogerrum/docker-oscar/blob/main/LICENSE)
-[![DockerHub pulls](https://img.shields.io/docker/pulls/rogerrum/docker-oscar.svg)](https://hub.docker.com/r/rogerrum/docker-oscar/)
-[![DockerHub stars](https://img.shields.io/docker/stars/rogerrum/docker-oscar.svg)](https://hub.docker.com/r/rogerrum/docker-oscar/)
+[![license](https://img.shields.io/github/license/drkduncan/docker-oscar)](https://github.com/drkduncan/docker-oscar/blob/main/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/rogerrum/docker-oscar.svg)](https://github.com/rogerrum/docker-oscar)
 [![Contributors](https://img.shields.io/github/contributors/rogerrum/docker-oscar.svg)](https://github.com/rogerrum/docker-oscar/graphs/contributors)
-[![Docker Image CI](https://github.com/rogerrum/docker-oscar/actions/workflows/docker-image.yml/badge.svg)](https://github.com/rogerrum/docker-oscar/actions/workflows/docker-image.yml)
+[![Docker Image CI](https://github.com/drkduncan/docker-oscar/actions/workflows/docker-image.yml/badge.svg)](https://github.com/drkduncan/docker-oscar/actions/workflows/docker-image.yml)
 
 
 A Docker image for **[OSCAR](https://www.sleepfiles.com/OSCAR/)** to run inside Docker container and access it remotely using web browser.
 
 
-Repository name in Docker Hub: **[rogerrum/docker-oscar](https://hub.docker.com/r/rogerrum/docker-oscar/)**  
-Repository name in ghcr.io: **[ghcr.io/rogerrum/docker-oscar](https://ghcr.io/rogerrum/docker-oscar)**
+Repository name in ghcr.io: **[ghcr.io/drkduncan/docker-oscar](https://github.com/drkduncan/docker-oscar/pkgs/container/docker-oscar)**
 
 Published via **automated build** mechanism  
 
@@ -26,10 +22,10 @@ To simply do a quick and dirty run of the Oscar container:
 docker run \
     -d --rm \
     --name oscar \
-    -v=${pwd}/oscar-data:/config/Documents/OSCAR_Data \
+    -v=${pwd}/oscar-data:/config/Documents/OSCAR20_Data \
     -v=${pwd}/SDCARD:/config/SDCARD \
     --publish=3000:3000 \
-     rogerrum/docker-oscar
+     ghcr.io/drkduncan/docker-oscar
   
 ```
 To stop the container simply run:
@@ -41,6 +37,14 @@ To remove the container simply run:
 $ docker rm oscar
 ```
 
+## Upgrading from OSCAR 1.x
+OSCAR 2.0 stores its data in a new SQL database under `OSCAR20_Data` and will not use the old `OSCAR_Data` folder directly.
+To migrate, mount your existing 1.x data read-only next to the new folder for the first start, then pick it in OSCAR's migration prompt:
+```
+    -v=${pwd}/oscar-data-v1:/config/Documents/OSCAR_Data:ro \
+    -v=${pwd}/oscar-data:/config/Documents/OSCAR20_Data \
+```
+
 ## Docker Compose
 If you don't want to type out these long **Docker** commands, you could
 optionally use [docker-compose](https://docs.docker.com/compose/) to set up your
@@ -50,13 +54,13 @@ image. Just download the repo and run it like so:
 version: '3.8'
 services:
   oscar:
-    image: rogerrum/docker-oscar:latest
+    image: ghcr.io/drkduncan/docker-oscar:latest
     container_name: oscar
     restart: unless-stopped
     ports:
       - 3000:3000
     volumes:
-      - ./oscar-data:/config/Documents/OSCAR_Data:rw
+      - ./oscar-data:/config/Documents/OSCAR20_Data:rw
       - ./SDCARD:/config/SDCARD:rw
     environment:
       TZ: "America/Chicago"
@@ -109,13 +113,13 @@ When its back up you should be able to SSH in and ping 192.168.4.1 which is the 
 version: '3.8'
 services:
   oscar:
-    image: rogerrum/docker-oscar:latest
+    image: ghcr.io/drkduncan/docker-oscar:latest
     container_name: oscar
     restart: unless-stopped
     ports:
       - 3000:3000
     volumes:
-      - ./oscar-data:/config/Documents/OSCAR_Data:rw
+      - ./oscar-data:/config/Documents/OSCAR20_Data:rw
       - ./SDCARD:/config/SDCARD:rw
     environment:
       TZ: "America/Chicago"
@@ -131,8 +135,7 @@ cron job is created only when env CRON_HOUR and CRON_MIN are passed.
 
 ### Additional Docker image for transferring data (Used as Kube Cron Job)
 
-Repository name in Docker Hub: **[rogerrum/docker-oscar-cron](https://hub.docker.com/r/rogerrum/docker-oscar-cron/)**
-Repository name in ghcr.io: **[rogerrum/docker-oscar-cron](https://ghcr.io/rogerrum/docker-oscar-cron)**
+Repository name in ghcr.io: **[ghcr.io/drkduncan/docker-oscar-cron](https://github.com/drkduncan/docker-oscar/pkgs/container/docker-oscar-cron)**
 
 This is how I am using the cron on my Kube cluster
 https://github.com/rogerrum/k8s-gitops/blob/main/main/homelab/oscar/templates/cronjob.yaml

@@ -1,12 +1,12 @@
 #!/bin/bash
 
 # default file copies first run
-if [[ ! -f /config/Documents/OSCAR_Data ]]; then
-  mkdir -p /config/Documents/OSCAR_Data
-  chown -R abc:abc /config/Documents/OSCAR_Data
+if [[ ! -d /config/Documents/OSCAR20_Data ]]; then
+  mkdir -p /config/Documents/OSCAR20_Data
+  chown -R abc:abc /config/Documents/OSCAR20_Data
 fi
 
-if [[ ! -f /config/SDCARD ]]; then
+if [[ ! -d /config/SDCARD ]]; then
   mkdir -p /config/SDCARD
   chown -R abc:abc /config/SDCARD
 fi
