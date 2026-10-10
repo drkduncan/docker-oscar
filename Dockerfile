@@ -14,9 +14,9 @@ RUN apt-get update -y && \
     apt-get install -y --no-install-recommends wget cron
 
 RUN if [ "${TARGETARCH}" = "arm64" ]; then \
-        wget -q -O /tmp/oscar.deb https://www.sleepfiles.com/OSCAR/${OSCAR_VERSION}/oscar20_${OSCAR_VERSION}-RasPiOS-12_arm64-Qt6.deb; \
+        wget -nv -O /tmp/oscar.deb https://www.sleepfiles.com/OSCAR/${OSCAR_VERSION}/oscar20_${OSCAR_VERSION}-RasPiOS-12_arm64-Qt6.deb; \
     else \ 
-        wget -q -O /tmp/oscar.deb https://www.sleepfiles.com/OSCAR/${OSCAR_VERSION}/oscar20_${OSCAR_VERSION}-Debian12_amd64-Qt6.deb; \
+        wget -nv -O /tmp/oscar.deb https://www.sleepfiles.com/OSCAR/${OSCAR_VERSION}/oscar20_${OSCAR_VERSION}-Debian12_amd64-Qt6.deb; \
     fi
 
 RUN apt install -y /tmp/oscar.deb && \
